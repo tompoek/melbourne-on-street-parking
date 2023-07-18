@@ -1,0 +1,3 @@
+curl -o on-street-parking-bay-sensors-record-search.json -X GET "https://data.melbourne.vic.gov.au/api/records/1.0/search/?dataset=on-street-parking-bay-sensors&q=&rows=2"
+
+curl -o on-street-parking-bay-sensors-record-lookup.json -X GET https://data.melbourne.vic.gov.au/api/datasets/1.0/on-street-parking-bay-sensors/records/ec8150297b665ab54877920457623b5f1a0a89d8

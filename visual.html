@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><head>
+    <title>Melbourne On-street Parking Bay Sensors</title>
+</head>
+<body>
+    <h1>Melbourne On-street Parking Bay Sensors</h1>
+    <p>(update frequency: 2 mins)</p>
+    <svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg">
+        <style>
+            .text-style {font: bold 4px sans-serif;}
+            .rect-style {width:50px;height:50px;stroke-width:1;stroke:rgb(0,0,0);}
+        </style>
+        <!-- Display Parking Bay ID, Updated time, and Occupancy Status (Green: NotPresent, Red: Present) -->
+        <!-- Bay 1 -->
+        <rect x="0" y="0" class="rect-style" style="fill:rgb(0,255,0);"></rect>
+        <text x="0" y="50" class="text-style">
+            <tspan x="0" dy="1.2em">ParkingBay-ID: XXXX</tspan>
+            <tspan x="0" dy="1.2em">Last-updated: 20230801T00:00:00</tspan>
+            <tspan x="0" dy="1.2em">Status: NotPresent</tspan>
+        </text>
+        <!-- Bay 2 -->
+        <rect x="100" y="0" class="rect-style" style="fill:rgb(255,0,0);"></rect>
+        <text x="0" y="50" class="text-style">
+            <tspan x="100" dy="1.2em">ParkingBay-ID: YYYY</tspan>
+            <tspan x="100" dy="1.2em">Last-updated: 20230801T00:00:00</tspan>
+            <tspan x="100" dy="1.2em">Status: Present</tspan>
+        </text>
+    </svg>
+</body></html>

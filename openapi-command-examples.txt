@@ -1,3 +1,15 @@
-curl -o on-street-parking-bay-sensors-record-search.json -X GET "https://data.melbourne.vic.gov.au/api/records/1.0/search/?dataset=on-street-parking-bay-sensors&q=&rows=2"
+# Problem: Blindly searching would return non-real-time data!
+curl -X GET "https://data.melbourne.vic.gov.au/api/records/1.0/search/?dataset=on-street-parking-bay-sensors&q=&rows=2"
 
-curl -o on-street-parking-bay-sensors-record-lookup.json -X GET https://data.melbourne.vic.gov.au/api/datasets/1.0/on-street-parking-bay-sensors/records/ec8150297b665ab54877920457623b5f1a0a89d8
+# Lookup by the recordid below (the only recordids, updated in real-time, that i can find).
+# ec8150297b665ab54877920457623b5f1a0a89d8
+# 132c4b221b4f7ff5abb3b4d4f2687284370e883f
+# 784fd0e132b6a2ef8af492bcb9f1f4834ad03833
+# ce6e708feddbe20eb18329abacd4c327ddc80fa8
+# 46b26ab42fdf1a1bc933937e5bfdb5923aed1e33
+# 0c2ac76ae8f9240d2d8363d193f0eb1efe253acf
+# 06dc7c07d6ffe36d69367849d8f5913381ac767f
+# 7978046b235866ba5805220c0245598f6b925713
+# a6430dbab4c13ed37252c3950502c889f97a9151
+
+curl -X GET https://data.melbourne.vic.gov.au/api/datasets/1.0/on-street-parking-bay-sensors/records/recordid

@@ -4,57 +4,66 @@
 </head>
 <body>
     <h1>Melbourne On-street Parking Bay Sensors</h1>
-    <p>(update frequency: once per 2 mins)</p>
+    <p>(update once per 2 mins)</p>
     <svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg">
         <style>
             .text-style {font: bold 4px sans-serif;}
             .rect-style {width:50px;height:100px;stroke-width:1;stroke:rgb(0,0,0);}
         </style>
-        <!-- Display Parking Bay ID, Updated time, and Occupancy Status (Green: NotPresent, Red: Present) -->
+        <!-- Display Parking Bay ID, Updated time, and Occupancy Status (White: Unoccupied, Grey: Present) -->
         <!-- Bay 1 -->
-        <rect x="0" y="0" class="rect-style" style="fill:rgb(0,255,0);"></rect>
+        <rect x="0" y="0" class="rect-style" id="bay-rect-1"></rect>
         <text x="0" y="100" class="text-style">
-            <!-- <tspan x="0" dy="1.2em">ParkingBay-ID: XXXX</tspan> -->
-            <tspan x="0" dy="1.2em" id="bay-id"></tspan>
-            <tspan x="0" dy="1.2em" id="bay-lastupdated"></tspan>
-            <tspan x="0" dy="1.2em" id="bay-status_description"></tspan>
+            <tspan x="0" dy="1.2em" id="bay-id-1"></tspan>
+            <tspan x="0" dy="1.2em" id="bay-lastupdated-1"></tspan>
+            <tspan x="0" dy="1.2em" id="bay-status_description-1"></tspan>
         </text>
         <!-- Bay 2 -->
-        <rect x="100" y="0" class="rect-style" style="fill:rgb(255,0,0);"></rect>
+        <rect x="100" y="0" class="rect-style" id="bay-rect-2"></rect>
         <text x="0" y="100" class="text-style">
-            <tspan x="100" dy="1.2em">ParkingBay-ID: YYYY</tspan>
-            <tspan x="100" dy="1.2em">Last-updated: 20230801T00:00:00</tspan>
-            <tspan x="100" dy="1.2em">Status: Present</tspan>
+            <tspan x="100" dy="1.2em" id="bay-id-2"></tspan>
+            <tspan x="100" dy="1.2em" id="bay-lastupdated-2"></tspan>
+            <tspan x="100" dy="1.2em" id="bay-status_description-2"></tspan>
         </text>
     </svg>
     <script>
         const bayIDKeyword = '"parkingbay_id": ';
         const lastUpdatedKeyword = '"lastupdated": "';
         const statusDescriptionKeyword = '"status_description": "';
-        function updateBayData() {
-            try {
-                var consoleCommand = console.log('curl -X GET https://data.melbourne.vic.gov.au/api/datasets/1.0/on-street-parking-bay-sensors/records/ec8150297b665ab54877920457623b5f1a0a89d8');
-                // var commandOutput = eval(consoleCommand);
-                var commandOutput = '{"datasetid": "on-street-parking-bay-sensors", "recordid": "ec8150297b665ab54877920457623b5f1a0a89d8", "fields": {"status_timestamp": "2023-07-21T22:48:51+00:00", "lastupdated": "2023-07-22T00:22:36+00:00", "parkingbay_id": 5369, "zone_number": 7649, "location": [-37.808886411089446, 144.97177809276388], "status_description": "Unoccupied"}, "geometry": {"type": "Point", "coordinates": [144.97177809276388, -37.808886411089446]}, "record_timestamp": "2023-07-22T00:22:38.324Z"}';
+        function updateBayData(idx, recordID) {
+            var commandInput = 'curl -X GET https://data.melbourne.vic.gov.au/api/datasets/1.0/on-street-parking-bay-sensors/records/' + recordID;
+            var commandOutput;
+                fetch('http://localhost/execute_command.php', {
+                    method: 'POST',
+                    body: 'commandInput=' + encodeURIComponent(commandInput),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
+                .then(response => response.text())
+                .then(commandOutput => {
+                    console.log(commandOutput);  // for debugging only
+                    var bayID = commandOutput.slice(commandOutput.search(bayIDKeyword)+bayIDKeyword.length, commandOutput.search(bayIDKeyword)+bayIDKeyword.length+4);
+                    var tspanBayID = document.getElementById('bay-id-'+idx.toString());
+                    tspanBayID.textContent = `ParkingBay-ID: ${bayID}`;
 
-                var bayID = commandOutput.slice(commandOutput.search(bayIDKeyword)+bayIDKeyword.length, commandOutput.search(bayIDKeyword)+bayIDKeyword.length+4);
-                var tspanBayID = document.getElementById('bay-id');
-                tspanBayID.textContent = `ParkingBay-ID: ${bayID}`;
+                    var lastUpdated = commandOutput.slice(commandOutput.search(lastUpdatedKeyword)+lastUpdatedKeyword.length, commandOutput.search(lastUpdatedKeyword)+lastUpdatedKeyword.length+19);
+                    var tspanLastUpdated = document.getElementById('bay-lastupdated-'+idx.toString());
+                    tspanLastUpdated.textContent = `Last-updated: ${lastUpdated}`;
 
-                var lastUpdated = commandOutput.slice(commandOutput.search(lastUpdatedKeyword)+lastUpdatedKeyword.length, commandOutput.search(lastUpdatedKeyword)+lastUpdatedKeyword.length+19);
-                var tspanLastUpdated = document.getElementById('bay-lastupdated');
-                tspanLastUpdated.textContent = `Last-updated: ${lastUpdated}`;
+                    var statusDescriptionStart = commandOutput.slice(commandOutput.search(statusDescriptionKeyword)+statusDescriptionKeyword.length);
+                    var statusDescription = statusDescriptionStart.slice(0, statusDescriptionStart.search('"}, '));
+                    var tspanStatusDescription = document.getElementById('bay-status_description-'+idx.toString());
+                    tspanStatusDescription.textContent = `Status: ${statusDescription}`;
 
-                var statusDescriptionStart = commandOutput.slice(commandOutput.search(statusDescriptionKeyword)+statusDescriptionKeyword.length);
-                var statusDescription = statusDescriptionStart.slice(0, statusDescriptionStart.search('"}, '));
-                var tspanStatusDescription = document.getElementById('bay-status_description');
-                tspanStatusDescription.textContent = `Status ${statusDescription}`;
-            } catch (error) {
-                document.getElementById('data').innerText = `Error: ${error.message}`;
-            }
+                    var bayRectangle = document.getElementById('bay-rect-'+idx.toString());
+                    if (statusDescription=='Unoccupied') {bayRectangle.setAttribute('fill','rgb(255,255,255)')} 
+                        else {bayRectangle.setAttribute('fill','rgb(128,128,128)')};
+                });
         }
         function updateAllData() {
-            updateBayData();
+            var recordIDs = ['ec8150297b665ab54877920457623b5f1a0a89d8', 'a6430dbab4c13ed37252c3950502c889f97a9151'];
+            for (let i=0; i<recordIDs.length; i++) {updateBayData(i+1, recordIDs[i])};
             setTimeout(updateAllData, 120000);
         }
         updateAllData();

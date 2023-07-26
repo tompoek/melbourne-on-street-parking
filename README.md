@@ -5,7 +5,7 @@ Demo instructions: (local PHP environment)
 2. ```git clone https://github.com/tompoek/melbourne-on-street-parking && cd melbourne-on-street-parking```
 3. ```cp visual.html execute_command.php /Applications/XAMPP/htdocs``` (copy the two files into XAMPP directory, my example: MacOS)
 4. In XAMPP, run Apache and MySQL.
-5. ```open /Applications/XAMPP/htdocs/visual.html``` (then enjoy watching it in your web browser!)
+5. Open a web browser, navigate to ```localhost/visual.html``` then enjoy watching!
 
 ![Demo Image](./demo-img.png)
 

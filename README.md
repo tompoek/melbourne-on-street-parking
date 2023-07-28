@@ -17,4 +17,7 @@ Progress:
 * Change bay color according to status description
 
 TODO / TOFIX:
-* ...
+* Possibly integrate this into UQ Cloud Computing course project...
+
+Data source: https://data.melbourne.vic.gov.au/explore/dataset/on-street-parking-bay-sensors/information/
+

@@ -17,7 +17,9 @@ Progress:
 * Change bay color according to status description
 
 TODO / TOFIX:
-* Possibly integrate this into UQ Cloud Computing course project...
+* Crawl status of more parking bays
+
+Final Goal: Visualize in a map
 
 Data source: https://data.melbourne.vic.gov.au/explore/dataset/on-street-parking-bay-sensors/information/
 
